@@ -19,21 +19,24 @@ class Hospital(models.Model):
     name=models.CharField(max_length=50,null=False,blank=False)
     address=models.CharField(max_length=200,null=False,blank=False)
     city = models.ForeignKey(City,on_delete=models.CASCADE,related_name='hospitals')  
-    phone = models.IntegerField(max_length=10,null=False,blank=False)
+    phone = models.IntegerField(null=False,blank=False)
     def __str__(self):
         return self.name
 
 
 
-class Services(models.Model):
-    hospital = models.OneToOneField(Hospital,primary_key=True,on_delete=models.CASCADE) 
-    oxygen_bed_total = models.IntegerField(default=0)
-    aoygen_bed_availble = models.IntegerField(default=0)
-    oxygen_cylender_total= models.IntegerField(default=0)
-    oxygen_cylender_available = models.IntegerField(default=0)
-    ventilator_total= models.IntegerField(default=0)
-    ventilator_availbale = models.IntegerField(default=0)
+class Facility(models.Model):
+    title = models.CharField( max_length=50,null=False,blank=False)
     def __str__(self):
-        return self.hospital.name
+        return self.title
 
 
+class Availability(models.Model):
+    hospital =  models.ForeignKey(Hospital,on_delete=models.CASCADE,related_name='availbilities')  
+    facility =  models.ForeignKey(Facility,on_delete=models.CASCADE,related_name='availbilities')
+    total = models.IntegerField(null=False,blank=False, default=0)
+    available = models.IntegerField(null=False,blank=False,default=0)  
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.hospital.name}-{self.facility.title}'

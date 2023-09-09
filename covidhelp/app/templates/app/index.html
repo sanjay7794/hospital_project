@@ -1,19 +1,114 @@
-<!DOCTYPE html>
+<!DOCTYPE html> {% load custom_tags %}
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        index page
-        <script src="" async defer></script>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>covidHelp</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+    <Br>
+    <Br>
+    <div class="container-fluid">
+        <!-- states-->
+        <form action="" method="GET" id="filterForm">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="">Select State</label>
+                        <select id="stateSelect" class="form-control" name="state">
+                      <option>Select State</option>
+                      {% for state in states %}
+                      <option {% is_state_selected selected_state state.pk %} value="{{state.pk}}">{{state}}</option>
+                      {% endfor %}
+                    </select>
+                    </div>
+                </div>
+                <!-- cities-->
+                <div class="col">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Select City</label>
+                        <select name="city" class="form-control" id="citySelect">
+                          <option>Select City</option>
+                          {% for city in cities %}
+                          <option {% is_city_selected selected_city city.pk %} value="{{city.pk}}">{{city}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+        <table class="table text-center table-bordered table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th rowspan="2">Hospital</th>
+                    {% for i in facilities %}
+                    <th colspan="2" class="text-center">{{i.title}}</th>
+                    {% endfor %}
+
+
+
+                </tr>
+                <tr>
+                    {% for i in facilities %}
+
+                    <th>Total</th>
+                    <th>Availble</th>
+                    {% endfor %}
+
+
+                </tr>
+
+
+
+            </thead>
+            <tbody>
+                {% for hospital in hospitals %}
+                <tr>
+                    <td>{{ hospital.name }}</td>
+                    {% get_availabilities hospital as availbilities %} {% for avl in availbilities %}
+
+
+                    <td>{{avl.total}}</td>
+                    <td class="{%get_table_class avl.available %}">{{avl.available}}</td>
+
+                    {% endfor %}
+
+                </tr>
+
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</body>
+<script>
+    window.onload = function() {
+        var stateSelect = document.getElementById('stateSelect')
+
+        var citySelect = document.getElementById('citySelect')
+        var form = document.getElementById('filterForm')
+        stateSelect.onchange = function() {
+            form.submit()
+
+        }
+
+        citySelect.onchange = function() {
+            form.submit()
+
+        }
+
+    }
+</script>
+
 </html>
